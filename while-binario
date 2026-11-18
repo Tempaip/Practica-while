@@ -1,0 +1,226 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        int opcion = 0;
+
+        // Ciclo principal del cajero automático
+        while (opcion != 6)
+        {
+            Console.WriteLine("\n===== CAJERO AUTOMÁTICO =====");
+            Console.WriteLine("1. Convertir número de cuenta a binario");
+            Console.WriteLine("2. Depositar billetes");
+            Console.WriteLine("3. Validar NIP");
+            Console.WriteLine("4. Analizar número de cuenta");
+            Console.WriteLine("5. Decodificar mensaje ASCII");
+            Console.WriteLine("6. Salir");
+            Console.Write("Elige una opción: ");
+
+            opcion = int.Parse(Console.ReadLine());
+
+            if (opcion == 1)
+            {
+                // Opción 1: Convertir número a binario usando divisiones sucesivas
+                int cuenta = 0;
+                while (cuenta <= 0)
+                {
+                    Console.Write("Ingrese número de cuenta positivo: ");
+                    cuenta = int.Parse(Console.ReadLine());
+                    if (cuenta <= 0)
+                    {
+                        Console.WriteLine("Número inválido, intenta de nuevo");
+                    }
+                }
+
+                int temp = cuenta;
+                string binario = "";
+                while (temp > 0)
+                {
+                    int residuo = temp % 2;
+                    binario = residuo.ToString() + binario;
+                    temp = temp / 2;
+                }
+                Console.WriteLine(cuenta + " -> " + binario);
+            }
+            else if (opcion == 2)
+            {
+                // Opción 2: Depositar billetes uno por uno
+                int billete = -1;
+                int billetesAceptados = 0;
+                int totalDepositado = 0;
+
+                while (billete != 0)
+                {
+                    Console.Write("Ingrese denominación (0 para terminar): ");
+                    billete = int.Parse(Console.ReadLine());
+
+                    if (billete == 0)
+                    {
+                        break;
+                    }
+                    
+                    if (billete == 20 || billete == 50 || billete == 100 || 
+                        billete == 200 || billete == 500 || billete == 1000)
+                    {
+                        totalDepositado = totalDepositado + billete;
+                        billetesAceptados = billetesAceptados + 1;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Billete no válido, se rechaza");
+                    }
+                }
+                Console.WriteLine("Billetes aceptados: " + billetesAceptados);
+                Console.WriteLine("Total depositado: $" + totalDepositado);
+            }
+            else if (opcion == 3)
+            {
+                // Opción 3: Validar NIP con máximo 3 intentos
+                int intentos = 0;
+                bool acceso = false;
+
+                while (intentos < 3 && !acceso)
+                {
+                    Console.Write("Ingrese NIP: ");
+                    int nip = int.Parse(Console.ReadLine());
+                    intentos = intentos + 1;
+
+                    if (nip == 1234)
+                    {
+                        Console.WriteLine("Acceso concedido en el intento " + intentos);
+                        acceso = true;
+                    }
+                    else
+                    {
+                        int restantes = 3 - intentos;
+                        if (restantes > 0)
+                        {
+                            Console.WriteLine("NIP incorrecto, te quedan " + restantes + " intentos");
+                        }
+                    }
+                }
+
+                if (!acceso)
+                {
+                    Console.WriteLine("Tarjeta bloqueada");
+                }
+            }
+            else if (opcion == 4)
+            {
+                // Opción 4: Analizar número (dígitos, suma, invertido y capicúa)
+                int num = 0;
+                while (num <= 0)
+                {
+                    Console.Write("Ingrese número de cuenta positivo: ");
+                    num = int.Parse(Console.ReadLine());
+                }
+
+                int original = num;
+                int cantidadDigitos = 0;
+                int suma = 0;
+                int invertido = 0;
+
+                while (num > 0)
+                {
+                    int digito = num % 10;
+                    suma = suma + digito;
+                    invertido = (invertido * 10) + digito;
+                    cantidadDigitos = cantidadDigitos + 1;
+                    num = num / 10;
+                }
+
+                string parImpar = "";
+                if (suma % 2 == 0)
+                {
+                    parImpar = "par";
+                }
+                else
+                {
+                    parImpar = "impar";
+                }
+
+                Console.Write(cantidadDigitos + " dígitos, suma = " + suma + " (" + parImpar + "), invertido = " + invertido + ", ");
+                if (original == invertido)
+                {
+                    Console.WriteLine("es capicúa");
+                }
+                else
+                {
+                    Console.WriteLine("no es capicúa");
+                }
+            }
+            else if (opcion == 5)
+            {
+                // Opción 5: Decodificar mensaje ASCII básico
+                int codigo = -1;
+                string mensaje = "";
+                int aceptados = 0;
+                int sumaCodigos = 0;
+
+                while (codigo != 0)
+                {
+                    Console.Write("Ingrese código ASCII (0 para terminar): ");
+                    codigo = int.Parse(Console.ReadLine());
+
+                    if (codigo == 0)
+                    {
+                        break;
+                    }
+
+                    if (codigo >= 32 && codigo <= 126)
+                    {
+                        char letra = (char)codigo;
+                        string tipo = "";
+
+                        if (letra >= 'A' && letra <= 'Z')
+                        {
+                            tipo = "Mayúscula";
+                        }
+                        else if (letra >= 'a' && letra <= 'z')
+                        {
+                            tipo = "Minúscula";
+                        }
+                        else if (letra >= '0' && letra <= '9')
+                        {
+                            tipo = "Dígito";
+                        }
+                        else
+                        {
+                            tipo = "Símbolo";
+                        }
+
+                        Console.WriteLine(letra + " -> " + tipo);
+                        mensaje = mensaje + letra;
+                        aceptados = aceptados + 1;
+                        sumaCodigos = sumaCodigos + codigo;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Código no válido, se rechaza");
+                    }
+                }
+
+                double promedio = 0;
+                if (aceptados > 0)
+                {
+                    promedio = (double)sumaCodigos / aceptados;
+                }
+
+                Console.WriteLine("Mensaje decodificado: " + mensaje);
+                Console.WriteLine("Caracteres aceptados: " + aceptados);
+                Console.WriteLine("Promedio de códigos: " + promedio.ToString("0.00"));
+            }
+            else if (opcion == 6)
+            {
+                // Opción 6: Salir del programa
+                Console.WriteLine("Gracias por usar el cajero automático");
+            }
+            else
+            {
+                Console.WriteLine("Opción no válida.");
+            }
+        }
+    }
+}
